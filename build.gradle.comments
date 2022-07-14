@@ -1,0 +1,123 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.4.3'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+/*
+Change the project directory structure
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/java']
+        }
+    }
+}
+*/
+
+// Version java
+java.toolchain.languageVersion = JavaLanguageVersion.of(8);
+//java.sourceCompatibility = JavaVersion.VERSION_1_8;
+
+// Build executable jar file
+bootJar {
+    archiveVersion = ''
+    mainClass = 'com.panyukovnn.gradlebasics.GradlebasicsApplication'
+}
+
+// Configuration
+configurations {
+    compileOnly.extendsFrom annotationProcessor
+    testCompileOnly.extendsFrom annotaionProcessor
+    testAnnotationProcessor.extendsFrom annotaionProcessor
+}
+
+// Variable declaration
+def springBootVersion = '2.4.3'
+/*
+ext {
+    commonsVersion = 3.11
+}
+*/
+
+// Repositories
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        url = uri('https://repo.maven.apache.org/maven2/')
+    }
+    /*
+    flatDir {
+        dirs 'lib'
+    }
+    */
+}
+
+dependencies {
+    /*
+    compileOnly - only at the compilation stage (lombok, logger)
+    runtimeOnly - runtime only (hibernate, postgres) (maven equivalent to 'runtime' scope)
+    implementation - both at runtime and at compile time (equivalent to no scope or 'compile' in maven)
+    Deprecated:
+    compile
+    runtime
+    testCompileOnly - at the compilation stage for tests (will not be when compiling the project)
+    testRuntimeOnly - in runtime for tests (will not be in project runtime)
+    testImplementation - runtime and compile-time for tests (equivalent to 'test' in maven)
+    Deprecated:
+    testCompile
+    testRuntime
+    annotaionProcessor - launch annotation processors for the project (except for tests)
+    testAnnotaionProcessor - start an annotation processor for tests
+    api - use to create a library
+    compileOnlyApi - doesn't work as advertised, don't use
+    */
+
+    implementation "org.springframework.boot:spring-boot-starter-tomcat:$springBootVersion"
+    implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+
+    annotationProcessor "org.projectlombok:lombok:1.18.16"
+//    compileOnly 'org.projectlombok:lombok:1.18.16'
+//    testCompileOnly 'org.projectlombok:lombok:1.18.16'
+//     testAnnotationProcessor 'org.projectlombok: lombok: 1.18.16'
+
+    implementation gradleApi()
+}
+
+// Encoding
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+/*
+Task - unit of work
+Each task is an object, it can be configured, configured,
+you can inherit from it and add something.
+You can put any java / groovy code into the task - this is both a strength and a weakness, because you can do anything.
+: gradle tasks - see what tasks are currently available
+: gradle clean - clean the project
+: gradle build - build executable jar file (similar to 'package' in maven)
+: gradle build -x test - build the project and skip the 'test' task
+: gradle build --dry-run - run the task and show the order of executed tasks
+*/
+
+// Own tasks
+task helloWorld {
+    doFirst {
+        println 'Hello, ' + nameProperty + '!'
+    }
+}
+
+/*
+dependOn check
+build.dependsOn helloWorld
+*/
+
+/*
+task greetingTask(type: GreetingTask) {
+    greetingName "ESA SPB"
+}
+*/

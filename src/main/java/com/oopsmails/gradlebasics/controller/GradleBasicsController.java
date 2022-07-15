@@ -11,6 +11,7 @@ public class GradleBasicsController {
     @GetMapping("/")
     public String getGradleBasics() {
         log.info("calling ............... getGradleBasics.");
+        System.out.println("System.out.println ............... getGradleBasics.");
         return "Hello, from gradle basics project !";
     }
 }

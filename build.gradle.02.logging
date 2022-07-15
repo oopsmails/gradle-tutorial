@@ -1,0 +1,98 @@
+plugins {
+	id 'org.springframework.boot' version '2.5.2'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group 'com.oopsmails.gradle.basics'
+version '1.0-SNAPSHOT'
+
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+
+def projectName = 'gradle-tutorial'
+def buildVersion = System.getenv("BUILD_NUMBER")
+def projectVersion = buildVersion != null ? buildVersion : "0.0.1"
+
+bootJar {
+	enabled = true
+	archivesBaseName="$projectName"+"-boot"
+	project.version="$projectVersion"
+}
+
+jar {
+	enabled = true
+	archivesBaseName="$projectName"
+	project.version="$projectVersion"
+}
+
+repositories {
+	mavenCentral()
+	mavenLocal() // this is for publishing to maven local
+//	maven {
+//		url = uri('https://repo.maven.apache.org/maven2/')
+//	}
+}
+
+// Encoding
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+// Variables
+//def springBootVersion = '2.5.2'
+
+dependencies {
+//	implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+//	implementation "org.springframework.boot:spring-boot-starter-web"
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+//	testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+//	testImplementation "org.junit.jupiter:junit-jupiter-api:5.6.0"
+//	testImplementation "org.junit.jupiter:junit-jupiter-engine:5.6.0"
+//	testImplementation "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+//	compileOnly 'org.projectlombok:lombok:1.18.16'
+//	annotationProcessor 'org.projectlombok:lombok:1.18.16'
+
+//	testImplementation "org.junit.jupiter:junit-jupiter-api"
+//	testImplementation "org.junit.jupiter:junit-jupiter-engine"
+//	testImplementation "org.springframework.boot:spring-boot-starter-test"
+//	compileOnly 'org.projectlombok:lombok'
+//	annotationProcessor 'org.projectlombok:lombok'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+//	implementation gradleApi() // causing error "Caused by: java.lang.IllegalArgumentException: LoggerFactory"
+}
+
+task helloViewer {
+	dependsOn check
+	doFirst {
+		println 'Hello, ' + name + '!'
+	}
+}
+
+//test.enabled = false
+
+// This will cause "Caused by: java.lang.IllegalArgumentException: LoggerFactory"
+import com.oopsmails.gradlebasics.GreetingTask
+
+task greetingTask(type: GreetingTask) {
+	group "Albert group"
+	greetingName "Albert"
+}
+
+
+//test {
+//	useJUnitPlatform()
+//}
+
+// no need
+configurations {
+	all*.exclude module : 'spring-boot-starter-logging'
+}

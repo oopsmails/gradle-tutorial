@@ -1,39 +1,52 @@
 plugins {
-    id 'java'
 	id 'org.springframework.boot' version '2.5.2'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
 }
 
-group 'com.oopsmails.gradle.basics'
-version '1.0-SNAPSHOT'
-
-java.sourceCompatibility = JavaVersion.VERSION_1_8
+group = 'com.oopsmails.gradle.basics'
+version = '1.0-SNAPSHOT'
+sourceCompatibility = '1.8'
 
 repositories {
 	mavenCentral()
-	mavenLocal() // this is for publishing to maven local
-	maven {
-		url = uri('https://repo.maven.apache.org/maven2/')
-	}
+	mavenLocal()
 }
 
-// Encoding
-tasks.withType(JavaCompile) {
-	options.encoding = 'UTF-8'
+def projectName = 'gradle-tutorial'
+def buildVersion = System.getenv("BUILD_NUMBER")
+def projectVersion = buildVersion != null ? buildVersion : "0.0.1"
+
+bootJar {
+	enabled = true
+	archivesBaseName="$projectName"+"-boot"
+	project.version="$projectVersion"
 }
 
-// Variables
-def springBootVersion = '2.5.2'
+jar {
+	enabled = true
+	archivesBaseName="$projectName"
+	project.version="$projectVersion"
+}
+
 
 dependencies {
-	implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	testImplementation group: 'junit', name: 'junit', version: '4.13.2'
-	testImplementation "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+	implementation 'com.oopsmails.springboot.dev.repo.gradle:spring-boot-java-main:0.0.1'
 
-	compileOnly 'org.projectlombok:lombok:1.18.16'
-	annotationProcessor 'org.projectlombok:lombok:1.18.16'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 
-	implementation gradleApi()
+	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+//	implementation gradleApi()
+}
+
+test {
+	useJUnitPlatform()
 }
 
 task helloViewer {
@@ -43,12 +56,11 @@ task helloViewer {
 	}
 }
 
-//test.enabled = false
 
-import com.oopsmails.gradlebasics.GreetingTask
-
-task greetingTask(type: GreetingTask) {
-	group "Albert group"
-	greetingName "Albert"
-}
+//import com.oopsmails.gradlebasics.GreetingTask
+//
+//task greetingTask(type: GreetingTask) {
+//	group "Albert group"
+//	greetingName "Albert"
+//}
 

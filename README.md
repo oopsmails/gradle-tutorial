@@ -73,6 +73,78 @@ To log at lifecycle level (visible by default)
 project.logger.lifecycle('my message visible by default')
 ```
 
+### multiple projects
+
+```
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'org.springframework.boot' version '2.5.7'
+}
+
+project ("sub-project-1") {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    task('hello').doLast {
+        println "I'm $project.name"
+    }
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot
+    ..................
+}
+
+```
+
+### How to store all dependencies in an external file
+
+- dependencies.gradle
+
+```
+ext.libs = [
+    'lombok' : 'org.projectlombok:lombok:1.18.16'
+    'guava' : 'com.google.guava:guava:31.0.1-jre'
+]
+
+ext.libsTest = [
+    'jupiterApi' : 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    'jupiterEngine' : 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
+]
+
+```
+
+- build.gradle
+
+```
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot
+    ..................
+    
+    apply from: "$rootProject.projectDir/dependencies.gradle"
+    
+    ..................
+    
+    dependencies {
+        implementation libs.guava
+
+        testImplementation libsTest.jupiterApi
+        testImplementation libsTest.jupiterEngine
+
+        annotationProcessor libs.lombok
+    }
+}
+
+```
+
+
 ## Error
 
 ### Spring boot app cannot start

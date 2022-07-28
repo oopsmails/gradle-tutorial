@@ -178,3 +178,12 @@ So, take those out and no need to `all*.exclude module : 'spring-boot-starter-lo
 
 Reload All Gradle Projects, in Gradle view.
 
+### * Exception is:
+
+org.gradle.api.GradleScriptException: A problem occurred evaluating project ':oopsmails-common:oopsmails-common-filter'
+
+need to add
+```
+id 'maven-publish'
+```
+
